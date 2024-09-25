@@ -1,0 +1,2 @@
+data/captions_train2017.json filter=lfs diff=lfs merge=lfs -text
+data/captions_val2017.json filter=lfs diff=lfs merge=lfs -text
