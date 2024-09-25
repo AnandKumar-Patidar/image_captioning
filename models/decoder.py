@@ -1,5 +1,6 @@
 
 import torch.nn as nn
+import torch
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers=1):

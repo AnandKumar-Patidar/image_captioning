@@ -1,0 +1,6 @@
+README.md
+setup.py
+image_captioning.egg-info/PKG-INFO
+image_captioning.egg-info/SOURCES.txt
+image_captioning.egg-info/dependency_links.txt
+image_captioning.egg-info/top_level.txt

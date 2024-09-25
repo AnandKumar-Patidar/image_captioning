@@ -1,5 +1,6 @@
 from collections import defaultdict
 from pycocotools.coco import COCO
+import nltk
 
 
 class Vocabulary:

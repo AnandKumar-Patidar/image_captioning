@@ -5,9 +5,6 @@ from PIL import Image
 import nltk
 
 
-
-
-
 class CocoDataset(Dataset):
     def __init__(self, root, ann_file, vocab, transform=None, subset_fraction=1.0):
         """

@@ -2,6 +2,17 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 import torchvision.models as models
+from models.encoder import EncoderCNN
+from models.decoder import DecoderRNN
+import torchvision.transforms as transform
+from utils import data_loader 
+from utils import vocab as vc
+
+
+image_root = 'data/'
+ann_file = 'data/captions_train2017.json'
+# Build vocabulary (done earlier)
+vocab = vc.build_vocab(ann_file, threshold=5)
 
 # Hyperparameters
 embed_size = 256
@@ -20,9 +31,15 @@ decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers=1).to(devic
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=learning_rate)
 
+
 # Load data
 # Assume you have already created a DataLoader called data_loader
-# data_loader = DataLoader(...)
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+data_loader = data_loader.get_loader(root=image_root, ann_file=ann_file, vocab=vocab, transform=transform, subset_fraction=0.25)
 
 # Training loop
 for epoch in range(num_epochs):
