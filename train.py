@@ -7,10 +7,12 @@ from models.decoder import DecoderRNN
 import torchvision.transforms as transforms
 from utils import data_loader 
 from utils import vocab as vc
+import os
 
 
 image_root = 'data/'
 ann_file = 'data/captions_train2017.json'
+save_dir = 'model/'
 # Build vocabulary (done earlier)
 vocab = vc.build_vocab(ann_file, threshold=5)
 
@@ -18,9 +20,9 @@ vocab = vc.build_vocab(ann_file, threshold=5)
 embed_size = 256
 hidden_size = 512
 vocab_size = len(vocab)  # Vocabulary size (make sure vocab.__len__() is implemented)
-num_epochs = 10
+num_epochs = 2
 learning_rate = 0.001
-log_interval = 10  # Log every 10 batches
+log_interval = 1  # Log every 10 batches
 batch_size = 32  # Batch size for training
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # Initialize models
@@ -43,7 +45,7 @@ data_loader = data_loader.get_loader(image_root, ann_file, vocab, transform, bat
 
 # Training loop
 for epoch in range(num_epochs):
-    encoder.train()  # Set encoder to training mode
+    # encoder.train()  # Set encoder to training mode
     decoder.train()  # Set decoder to training mode
     
     total_loss = 0  # Keep track of loss for the entire epoch
@@ -59,9 +61,10 @@ for epoch in range(num_epochs):
 
         # Forward pass: Generate captions using the decoder
         outputs = decoder(features, captions)  # (batch_size, max_caption_length, vocab_size)
+        outputs = outputs.view(-1, vocab_size)
         
-        # Adjust the outputs to exclude the last time step, to match the target captions[:, 1:]
-        outputs = outputs[:, :-1, :]  # Exclude the last predicted word
+        #  Shift the target captions to exclude the <start> token
+        targets = captions[:, 1:].contiguous().view(-1)  # (batch_size * max_caption_length - 1)
 
 # Flatten the outputs and the target captions
         loss = criterion(outputs.contiguous().view(-1, vocab_size), captions[:, 1:].contiguous().view(-1))
@@ -82,3 +85,9 @@ for epoch in range(num_epochs):
     
     # Average loss for the epoch
     print(f"Epoch [{epoch+1}/{num_epochs}], Average Loss: {total_loss / len(data_loader):.4f}")
+
+    torch.save()
+
+# Save the model checkpoints at the end of each epoch
+torch.save(encoder.state_dict(), os.path.join(save_dir, f'encoder_cnn_epoch_{epoch+1}_loss_{avg_loss:.4f}.pth'))
+torch.save(decoder.state_dict(), os.path.join(save_dir, f'decoder_rnn_epoch_{epoch+1}_loss_{avg_loss:.4f}.pth'))

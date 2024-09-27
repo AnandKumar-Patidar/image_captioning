@@ -3,6 +3,11 @@ import requests
 from io import BytesIO
 from PIL import Image
 import nltk
+from torch.utils.data import Dataset
+import random
+import torch
+
+
 
 
 class CocoDataset(Dataset):

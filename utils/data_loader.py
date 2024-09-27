@@ -1,4 +1,8 @@
 from torch.utils.data import DataLoader
+from utils.coco_dataset import CocoDataset
+import torch
+import torch.nn.utils.rnn as rnn
+
 
 def collate_fn(data, pad_idx):
     """Creates mini-batch tensors from the list of tuples (image, caption)."""
@@ -11,7 +15,7 @@ def collate_fn(data, pad_idx):
 
     # Pad the captions to the maximum length in the batch
     lengths = [len(cap) for cap in captions]
-    padded_captions = pad_sequence(captions, batch_first=True, padding_value=pad_idx)
+    padded_captions = rnn.pad_sequence(captions, batch_first=True, padding_value=pad_idx)
 
     return images, padded_captions, lengths
 def get_loader(root, ann_file, vocab, transform, batch_size, shuffle=True, num_workers=4, subset_fraction=1.0):
