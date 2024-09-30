@@ -7,16 +7,27 @@ from models.decoder import DecoderRNN
 import torchvision.transforms as transforms
 from utils import data_loader 
 from utils import vocab as vc
-import os
+from utils.vocab import Vocabulary
 
+import os
+import pickle
 
 image_root = 'data'
 ann_file = 'data/captions_train2017.json'
 save_dir = 'checkpoints/'
+vocab_file = 'vocab.pkl'
+
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
+
 # Build vocabulary (done earlier)
-vocab = vc.build_vocab(ann_file, threshold=5)
+if os.path.exists(vocab_file):
+    with open(vocab_file, 'rb') as f:
+        vocab = pickle.load(f)
+else:
+    vocab = vc.build_vocab(ann_file, threshold=5)
+    with open(vocab_file, 'wb') as f:
+        pickle.dump(vocab, f)
 
 # Hyperparameters
 embed_size = 256
@@ -27,7 +38,7 @@ learning_rate = 0.001
 log_interval = 1  # Log every 10 batches
 batch_size = 32  # Batch size for training
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-subset_fraction = 0.2
+subset_fraction = 0.25
 # Initialize models
 encoder = EncoderCNN(embed_size).to(device)
 decoder = DecoderRNN(embed_size, hidden_size, vocab_size, num_layers=1).to(device)

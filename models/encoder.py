@@ -10,7 +10,7 @@ class EncoderCNN(nn.Module):
     """
     def __init__(self, embed_size):
         super(EncoderCNN, self).__init__()
-        resnet = models.resnet50(pretrained=True) #Load the model with all the pretrained weights
+        resnet = models.resnet50(weights = models.ResNet50_Weights.DEFAULT) #Load the model with all the pretrained weights
         for param in resnet.parameters():
             param.requires_grad_(False)
             #By setting requires_grad=False, you are telling PyTorch not to compute gradients for this tensor during backpropagation.

@@ -1,7 +1,9 @@
 from collections import defaultdict
 from pycocotools.coco import COCO
 import nltk
-
+import argparse
+import os
+import pickle
 
 class Vocabulary:
     def __init__(self, threshold):
@@ -46,4 +48,32 @@ def build_vocab(ann_file, threshold=5):
             vocab.add_word(word)
 
     return vocab
+
+def save_vocab(vocab, vocab_file):
+    """Save the vocabulary object to a pickle file."""
+    with open(vocab_file, 'wb') as f:
+        pickle.dump(vocab, f)
+    print(f"Vocabulary saved to {vocab_file}")
+
+
+def main(args):
+    ann_file = args.caption_path  # Path to COCO annotation file
+    vocab_file = 'vocab.pkl'  # Output file to save the vocabulary
+
+    if os.path.exists(vocab_file):
+        print(f"Vocabulary file {vocab_file} already exists!")
+    else:
+        # Build the vocabulary from the COCO captions
+        print("Building vocabulary...")
+        vocab = build_vocab(ann_file, threshold=5)
+
+        # Save the vocabulary to a pickle file
+        save_vocab(vocab, vocab_file)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Vocab building')
+    parser.add_argument('--caption_path', type=str, default='data/captions_train2017.json', help="path caption jason file")
+    args = parser.parse_args()
+    main(args)
     
