@@ -6,7 +6,7 @@ import nltk
 from torch.utils.data import Dataset
 import random
 import torch
-
+import time
 
 
 
@@ -43,8 +43,22 @@ class CocoDataset(Dataset):
         path = img_info['file_name']
         img_url = img_info['coco_url']  # Get the image URL from COCO annotations
 
-        # Fetch the image from the URL
-        response = requests.get(img_url)
+        retries = 5  # number of times to retry
+        for attempt in range(retries):
+            try:
+                response = requests.get(img_url)
+                response.raise_for_status()  # check for HTTP errors
+                break
+            except requests.exceptions.ConnectionError as e:
+                print(f"Connection error: {e}, retrying {attempt+1}/{retries}...")
+                time.sleep(2)  # wait for 2 seconds before retrying
+            except requests.exceptions.HTTPError as e:
+                print(f"HTTP error: {e}")
+                return None  # you might want to skip the image if there's an HTTP error
+
+        else:
+            raise requests.exceptions.ConnectionError(f"Failed to download image after {retries} retries.")
+        
         image = Image.open(BytesIO(response.content)).convert('RGB')
 
 

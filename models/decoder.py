@@ -1,6 +1,7 @@
 
 import torch.nn as nn
 import torch
+import torch.nn.functional as F
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers=1):
@@ -34,6 +35,7 @@ class DecoderRNN(nn.Module):
         
         # Embedding the captions, excluding the <end> token"
         embeddings = self.embedding(captions[:, :-1])
+
         
         # Concatenate the features with the embedded captions
         # Features are passed as input to the first time step
@@ -42,8 +44,11 @@ class DecoderRNN(nn.Module):
         
         # Pass the concatenated inputs through the LSTM
         lstm_out, _ = self.lstm(lstm_input)
+        # lstm_out = lstm_out[:,:-1,:] # getting rid of last out put <end>
         
         # Pass the LSTM output through the fully connected layer to get word predictions
         outputs = self.fc(lstm_out)
+        # probabilities = F.softmax(outputs.to(torch.float), dim=1)
+        # _, predicted_indices = torch.max(outputs, dim=1)
         
         return outputs

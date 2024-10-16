@@ -11,8 +11,8 @@ import pickle
 import torch.nn.functional as F
 
 ann_file = 'data/captions_train2017.json'
-encoder_path = '/home/mirsee/image_captioning/checkpoints/encoder_cnn_0.01_epoch_1_loss_3.3651.pth'
-decoder_path = '/home/mirsee/image_captioning/checkpoints/decoder_rnn_0.01_epoch_1_loss_3.3651.pth'
+encoder_path = '/home/mirsee/image_captioning/checkpoints/encoder_cnn_0.001_epoch_20_loss_0.7359_2024-10-08_23-51-29.pth'
+decoder_path = '/home/mirsee/image_captioning/checkpoints/decoder_rnn_0.001_epoch_20_loss_0.7359_2024-10-08_23-51-29.pth'
 image_path = 'bike.jpg'
 vocab_file = 'vocab.pkl'
 
