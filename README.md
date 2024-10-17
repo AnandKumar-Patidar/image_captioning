@@ -44,7 +44,6 @@ To train the image captioning model, run the following command:
 
 ```
 python3 train.py
-
 ```
 ### Evaluating model
 ```
