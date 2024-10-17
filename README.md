@@ -4,7 +4,7 @@ This project implements an image captioning system using a CNN as the image enco
 
 ## Project Structure
 
-```bash
+```
 image-captioning/
 │
 ├── data/                             # Store or link to your dataset
@@ -31,19 +31,22 @@ image-captioning/
 ├── README.md                         # Project description and setup instructions
 ├── train.py                          # Main training script
 └── eval.py                           # Script to evaluate model performance
+```
 
+```bash
 git clone https://github.com/yourusername/image-captioning.git
 cd image-captioning
 pip install -r requirements.txt
-
+```
 ## Usage
 Training the Model
 To train the image captioning model, run the following command:
+
 ```
 python3 train.py
-```
 
-evaluating model
+```
+### Evaluating model
 ```
 python3 eval.py
 ```
