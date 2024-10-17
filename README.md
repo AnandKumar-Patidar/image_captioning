@@ -36,10 +36,14 @@ git clone https://github.com/yourusername/image-captioning.git
 cd image-captioning
 pip install -r requirements.txt
 
-Usage
+## Usage
 Training the Model
 To train the image captioning model, run the following command:
+```
 python3 train.py
+```
 
 evaluating model
+```
 python3 eval.py
+```
